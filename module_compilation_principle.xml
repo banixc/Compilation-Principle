@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_compilation_principle" default="compile.module.compilation_principle">
+  <dirname property="module.compilation_principle.basedir" file="${ant.file.module_compilation_principle}"/>
+  
+  <property name="module.jdk.home.compilation_principle" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.compilation_principle" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.compilation_principle" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.compilation_principle" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="compilation_principle.output.dir" value="${module.compilation_principle.basedir}/out/production/Compilation Principle"/>
+  <property name="compilation_principle.testoutput.dir" value="${module.compilation_principle.basedir}/out/test/Compilation Principle"/>
+  
+  <path id="compilation_principle.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="compilation_principle.module.production.classpath">
+    <path refid="${module.jdk.classpath.compilation_principle}"/>
+  </path>
+  
+  <path id="compilation_principle.runtime.production.module.classpath">
+    <pathelement location="${compilation_principle.output.dir}"/>
+  </path>
+  
+  <path id="compilation_principle.module.classpath">
+    <path refid="${module.jdk.classpath.compilation_principle}"/>
+    <pathelement location="${compilation_principle.output.dir}"/>
+  </path>
+  
+  <path id="compilation_principle.runtime.module.classpath">
+    <pathelement location="${compilation_principle.testoutput.dir}"/>
+    <pathelement location="${compilation_principle.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.compilation_principle">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.compilation_principle">
+    <patternset refid="excluded.from.module.compilation_principle"/>
+  </patternset>
+  
+  <path id="compilation_principle.module.sourcepath">
+    <dirset dir="${module.compilation_principle.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.compilation_principle" depends="compile.module.compilation_principle.production,compile.module.compilation_principle.tests" description="Compile module Compilation Principle"/>
+  
+  <target name="compile.module.compilation_principle.production" depends="register.custom.compilers" description="Compile module Compilation Principle; production classes">
+    <mkdir dir="${compilation_principle.output.dir}"/>
+    <javac2 destdir="${compilation_principle.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.compilation_principle}/javac">
+      <compilerarg line="${compiler.args.compilation_principle}"/>
+      <bootclasspath refid="compilation_principle.module.bootclasspath"/>
+      <classpath refid="compilation_principle.module.production.classpath"/>
+      <src refid="compilation_principle.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.compilation_principle"/>
+    </javac2>
+    
+    <copy todir="${compilation_principle.output.dir}">
+      <fileset dir="${module.compilation_principle.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.compilation_principle.tests" depends="register.custom.compilers,compile.module.compilation_principle.production" description="compile module Compilation Principle; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.compilation_principle" description="cleanup module">
+    <delete dir="${compilation_principle.output.dir}"/>
+    <delete dir="${compilation_principle.testoutput.dir}"/>
+  </target>
+</project>
