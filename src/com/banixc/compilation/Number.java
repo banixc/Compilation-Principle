@@ -1,13 +1,12 @@
 package com.banixc.compilation;
 
-/**
- * Created by Banixc on 2016/5/25.
- */
-public class Number extends Node {
+class Number extends Node {
+
+    private static final String TAG = "Number";
 
     private int number;
 
-    public Number(int number) {
+    Number(int number) {
         this.number = number;
     }
 
@@ -18,11 +17,11 @@ public class Number extends Node {
 
     @Override
     public String toString() {
-        return String.valueOf(getValue());
+        return TAG+"("+ String.valueOf(getValue()) + ")";
     }
 
     @Override
     public String tree(int floor) {
-        return "NUMBER:" + number + "\n";
+        return getDiv(floor) + "Number(" + number + ")\n";
     }
 }

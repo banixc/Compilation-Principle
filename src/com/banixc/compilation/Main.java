@@ -9,7 +9,7 @@ public class Main {
     private static final String encoding = "UTF-8";
 
 
-    public static String readFile(String filePath){
+    private static String readFile(String filePath){
         try {
             File file=new File(filePath);
             if(file.isFile() && file.exists()){
@@ -17,7 +17,7 @@ public class Main {
                         new FileInputStream(file),encoding);
                 BufferedReader bufferedReader = new BufferedReader(read);
                 String allTxt = "";
-                String lineTxt = null;
+                String lineTxt;
                 while((lineTxt = bufferedReader.readLine()) != null){
                     allTxt+=lineTxt+"\n";
                 }
@@ -32,7 +32,7 @@ public class Main {
 
     }
 
-    public static boolean writeFile(String fileName,String content) {
+    private static boolean writeFile(String fileName, String content) {
         try {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fileName),encoding);
             out.write(content);
@@ -50,19 +50,20 @@ public class Main {
 
 
         if(args.length>0) {
-            for(int i=0;i<args.length;i++) {
-                String fileName = args[i];
+            for (String fileName : args) {
                 String content = readFile(fileName);
-                if(content!=null) {
+                if (content != null) {
                     String write = "";
-                    StringTokenizer stringTokenizer = new StringTokenizer(content,"\n");
+                    StringTokenizer stringTokenizer = new StringTokenizer(content, "\n");
 
-                    if(stringTokenizer.hasMoreTokens()){
-                        Tree tree = new Tree(stringTokenizer.nextToken());
-                        write+=tree.toString() + tree.getNode().tree(1)+"\n";
+                    while (stringTokenizer.hasMoreTokens()) {
+                        String lexp = stringTokenizer.nextToken();
+                        Tree tree = new Tree(lexp);
+                        write += lexp + "\n" +
+                                tree.getNode().tree(0) + "\n";
                     }
-                    boolean flags = writeFile(fileName+".out",write);
-                    System.out.println(fileName + " Convert " + (flags?"success!":"failed!"));
+                    boolean flags = writeFile(fileName + ".out", write);
+                    System.out.println(fileName + " Convert " + (flags ? "success!" : "failed!"));
                 } else {
                     System.out.println(fileName + " Not find!");
                 }

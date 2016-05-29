@@ -1,6 +1,8 @@
 package com.banixc.compilation;
 
 class LexpSeqNode extends Node{
+    private static final String TAG = "LexpSeqNode";
+
     private Node node;
 
     LexpSeqNode(Number number){
@@ -18,13 +20,13 @@ class LexpSeqNode extends Node{
 
     @Override
     public String toString() {
-        return String.valueOf(getValue());
+        return TAG+"("+ String.valueOf(getValue()) + ")";
     }
 
     @Override
     public String tree(int floor) {
 
-        return node.tree(floor);
+        return getDiv(floor) + toString() + "\n" + node.tree(floor+1);
 
     }
 }

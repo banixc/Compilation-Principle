@@ -3,14 +3,16 @@ package com.banixc.compilation;
 
 import static com.banixc.compilation.Token.*;
 
-public class LexpNode extends Node {
+class LexpNode extends Node {
+
+    private static final String TAG = "LexpNode";
 
     private Op op;
     private Number number;
     private LexpSeqNode lexpSeqNode;
     private boolean isNumberBefore;
 
-    public LexpNode(Op op, Number number, LexpSeqNode lexpSeqNode,boolean isNumberBefore) {
+    LexpNode(Op op, Number number, LexpSeqNode lexpSeqNode, boolean isNumberBefore) {
         this.op = op;
         this.number = number;
         this.lexpSeqNode = lexpSeqNode;
@@ -34,30 +36,24 @@ public class LexpNode extends Node {
     @Override
     public String toString() {
         if(number!=null && op != null && lexpSeqNode != null)
-        return String.valueOf(getValue());
+        return TAG+"("+String.valueOf(getValue())+")";
         else
             return "ERROR";
     }
 
     @Override
     public String tree(int floor) {
-        String all = toString()+"\n";
-        String temp = "";
-        for (int i = 0; i < floor; i++) {
-//            if(i==floor-1)
-//                temp += "├-";
-//            else
-//                temp += "| ";
-            temp += "  ";
-        }
+        String div = getDiv(floor);
+        String all = div + toString()+"\n";
+
         if(isNumberBefore){
             all += number.tree(floor+1);
-            all += temp + op.toString() + "\n";
-            all += temp + lexpSeqNode.tree(floor+1);
+            all += op.tree(floor+1);
+            all += lexpSeqNode.tree(floor+1);
         } else {
-            all += temp + lexpSeqNode.tree(floor+1);
-            all += temp + op.toString() + "\n";
-            all += temp + number.tree(floor+1);
+            all += lexpSeqNode.tree(floor+1);
+            all += op.tree(floor+1);
+            all += number.tree(floor+1);
         }
         return all;
     }

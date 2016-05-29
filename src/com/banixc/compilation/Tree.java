@@ -8,7 +8,7 @@ class Tree {
     private List<Token> list;
     private Node node;
 
-    Tree(List<Token> list) {
+    private Tree(List<Token> list) {
         this.list = list;
 //        list.stream().filter(token -> token.type == BLANK).forEach(list::remove);
 //        for (Token token: list){
@@ -24,7 +24,10 @@ class Tree {
     }
 
     Node getNode(){
+        if(node!=null)
         return node;
+        else
+            return new ErrorNode();
     }
 
     @Override
@@ -52,19 +55,19 @@ class Tree {
         if(list.get(start).type==OPEN && list.get(end-1).type==CLOSE){
             start++;
             end--;
-            Op op=getOp(start,end);
+            Op op=getOp(start,start +1);
             if(op==null) return null;
-            // 两种情况 1.首项为NUMBER
-            Number number = getNumber(start+1,end);
+            // 两种情况 1.首项为NUMBER 则start +1  为 number start +2 - end 为 lexp
+            Number number = getNumber(start+1,start+2);
             if(number != null) {
                 LexpSeqNode node = getLexpSeq(start+2,end);
                 if(node == null) return null;
                 return new LexpNode(op,number,node,true);
             }
-            //2.首项为LexpSeq
-            LexpSeqNode node = getLexpSeq(start+2,end-1);
+            //2.首项为LexpSeq 则start +1 - end - 1 为 lexp  end - 1 - end 为 number
+            LexpSeqNode node = getLexpSeq(start +1,end-1);
             if(node == null) return null;
-            number = getNumber(end-1,end);
+            number = getNumber(end - 1,end);
             if(number != null) {
                 return new LexpNode(op,number,node,false);
             } else {
@@ -89,9 +92,6 @@ class Tree {
             return new Op(type);
         }
         return null;
-    }
-
-    private void clear(){
     }
 
 }
